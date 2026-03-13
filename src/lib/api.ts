@@ -1,5 +1,6 @@
 import { getGlobalStats as getMockGlobalStats } from '@/data/projects'
 import { getProject as getMockProject } from '@/data/projects'
+import { fetchEnsueStats } from './ensue'
 
 const API_BASE = process.env.NEXT_PUBLIC_SITE_URL || ''
 
@@ -19,6 +20,12 @@ function getMockProjectStats(slug: string) {
 }
 
 export async function fetchProjectStats(slug: string) {
+  // For autoresearch-at-home, fetch live data from Ensue's public API
+  if (slug === 'autoresearch-at-home') {
+    const ensueStats = await fetchEnsueStats()
+    if (ensueStats) return ensueStats
+  }
+
   if (!API_BASE) return getMockProjectStats(slug)
 
   try {

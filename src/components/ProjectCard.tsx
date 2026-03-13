@@ -15,7 +15,18 @@ export default function ProjectCard({ project }: { project: Project }) {
       href={`/projects/${project.slug}`}
       className="block rounded-xl border border-sand-dark bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
     >
-      <FieldTag field={project.field} color={project.field_color} />
+      <div className="flex items-center gap-2">
+        <FieldTag field={project.field} color={project.field_color} />
+        <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+          project.compute_tier === 'cpu'
+            ? 'bg-sage/20 text-sage'
+            : project.compute_tier === 'single-gpu'
+              ? 'bg-amber/20 text-amber'
+              : 'bg-coral/20 text-coral'
+        }`}>
+          {project.compute_tier === 'cpu' ? 'CPU' : project.compute_tier === 'single-gpu' ? 'GPU' : 'Multi-GPU'}
+        </span>
+      </div>
 
       <h3 className="mt-2 text-lg font-semibold text-charcoal">
         {project.name}

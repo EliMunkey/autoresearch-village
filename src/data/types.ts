@@ -27,6 +27,7 @@ export interface Project {
   slug: string
   field: string
   field_color: string
+  compute_tier: 'cpu' | 'single-gpu' | 'multi-gpu'
   description: string
   long_description: string
   repo_url: string
