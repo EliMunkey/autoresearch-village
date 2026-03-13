@@ -4,6 +4,7 @@ const colorMap: Record<string, string> = {
   sky: 'bg-sky/15 text-sky',
   lavender: 'bg-lavender/15 text-lavender',
   amber: 'bg-amber/15 text-amber',
+  peach: 'bg-peach/15 text-peach',
 }
 
 export default function FieldTag({

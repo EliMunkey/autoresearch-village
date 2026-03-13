@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
+import PixelAgent from '@/components/PixelAgent'
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr)
@@ -23,6 +24,14 @@ export default function ProgressChart({
   metricName: string
   direction: 'lower' | 'higher'
 }) {
+  if (history.length === 0) {
+    return (
+      <div className="flex min-h-[300px] items-center justify-center rounded-xl border border-sand-dark bg-white p-6">
+        <PixelAgent size="lg" message="Waiting for the first experiment..." />
+      </div>
+    )
+  }
+
   return (
     <div className="rounded-xl border border-sand-dark bg-white p-6">
       <ResponsiveContainer width="100%" height={300}>

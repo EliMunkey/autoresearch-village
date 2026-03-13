@@ -8,6 +8,7 @@ import FieldTag from '@/components/FieldTag'
 import Dashboard from '@/components/Dashboard'
 import ProgressChart from '@/components/ProgressChart'
 import JoinSection from '@/components/JoinSection'
+import PixelAgent from '@/components/PixelAgent'
 
 export function generateStaticParams() {
   return getAllProjects().map((p) => ({ slug: p.slug }))
@@ -98,9 +99,20 @@ export default async function Page({
             {project.time_budget}
           </span>
         </div>
-        <p className="mt-6 max-w-3xl leading-relaxed text-charcoal-light">
-          {project.long_description}
-        </p>
+        <div className="mt-6 max-w-3xl space-y-4">
+          {project.long_description.split('\n\n').map((paragraph: string, i: number) => (
+            <p
+              key={i}
+              className={
+                i === 0
+                  ? 'text-base leading-relaxed text-charcoal-light'
+                  : 'text-sm leading-relaxed text-charcoal-light'
+              }
+            >
+              {paragraph}
+            </p>
+          ))}
+        </div>
       </section>
 
       {/* Section 2 — Dashboard */}
@@ -121,45 +133,51 @@ export default async function Page({
       {/* Section 4 — Recent Experiments */}
       <section className="py-8">
         <h2 className="mb-4 text-xl font-semibold">Recent Experiments</h2>
-        <div className="overflow-x-auto rounded-xl border border-sand-dark bg-white">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="bg-sand-dark/50 text-sm font-medium text-charcoal-light">
-                <th className="px-4 py-3">#</th>
-                <th className="px-4 py-3">Result</th>
-                <th className="px-4 py-3">Hypothesis</th>
-                <th className="hidden px-4 py-3 sm:table-cell">Agent</th>
-                <th className="hidden px-4 py-3 sm:table-cell">Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedExperiments.map(
-                (exp: ExperimentResult, index: number) => (
-                  <tr
-                    key={`${exp.timestamp}-${index}`}
-                    className={`border-b border-sand-dark last:border-0 ${
-                      index === 0 ? 'bg-coral/5' : ''
-                    }`}
-                  >
-                    <td className="px-4 py-3 font-medium">{index + 1}</td>
-                    <td className="px-4 py-3 font-mono">
-                      {exp.value} {metric.unit}
-                    </td>
-                    <td className="max-w-xs truncate px-4 py-3">
-                      {exp.hypothesis}
-                    </td>
-                    <td className="hidden px-4 py-3 text-charcoal-light sm:table-cell">
-                      {exp.agent_type || 'Unknown'}
-                    </td>
-                    <td className="hidden px-4 py-3 text-charcoal-light sm:table-cell">
-                      {relativeTime(exp.timestamp)}
-                    </td>
-                  </tr>
-                ),
-              )}
-            </tbody>
-          </table>
-        </div>
+        {sortedExperiments.length === 0 ? (
+          <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-sand-dark bg-white p-6">
+            <PixelAgent size="md" message="No experiments yet — be the first to contribute" />
+          </div>
+        ) : (
+          <div className="overflow-x-auto rounded-xl border border-sand-dark bg-white">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="bg-sand-dark/50 text-sm font-medium text-charcoal-light">
+                  <th className="px-4 py-3">#</th>
+                  <th className="px-4 py-3">Result</th>
+                  <th className="px-4 py-3">Hypothesis</th>
+                  <th className="hidden px-4 py-3 sm:table-cell">Agent</th>
+                  <th className="hidden px-4 py-3 sm:table-cell">Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedExperiments.map(
+                  (exp: ExperimentResult, index: number) => (
+                    <tr
+                      key={`${exp.timestamp}-${index}`}
+                      className={`border-b border-sand-dark last:border-0 ${
+                        index === 0 ? 'bg-coral/5' : ''
+                      }`}
+                    >
+                      <td className="px-4 py-3 font-medium">{index + 1}</td>
+                      <td className="px-4 py-3 font-mono">
+                        {exp.value} {metric.unit}
+                      </td>
+                      <td className="max-w-xs truncate px-4 py-3">
+                        {exp.hypothesis}
+                      </td>
+                      <td className="hidden px-4 py-3 text-charcoal-light sm:table-cell">
+                        {exp.agent_type || 'Unknown'}
+                      </td>
+                      <td className="hidden px-4 py-3 text-charcoal-light sm:table-cell">
+                        {relativeTime(exp.timestamp)}
+                      </td>
+                    </tr>
+                  ),
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
 
       {/* Section 5 — Join This Project */}

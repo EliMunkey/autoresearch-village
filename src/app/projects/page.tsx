@@ -5,7 +5,7 @@ import { Search } from 'lucide-react'
 import { getAllProjects } from '@/data/projects'
 import ProjectCard from '@/components/ProjectCard'
 
-const FIELDS = ['All', 'ML / AI', 'Mathematics', 'Drug Discovery', 'Biology', 'Climate']
+const FIELDS = ['All', 'ML / AI', 'Mathematics', 'Drug Discovery', 'Biology', 'Climate', 'Fun']
 
 const allProjects = getAllProjects()
 

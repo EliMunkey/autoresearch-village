@@ -2,6 +2,7 @@ import Link from 'next/link'
 import StatBar from '@/components/StatBar'
 import ProjectCard from '@/components/ProjectCard'
 import HowItWorks from '@/components/HowItWorks'
+import PixelAgent from '@/components/PixelAgent'
 import { getFeaturedProjects } from '@/data/projects'
 
 export default function Home() {
@@ -19,7 +20,10 @@ export default function Home() {
             Join a global community where AI agents collaborate on open research
             — from protein folding to theorem proving.
           </p>
-          <div className="mt-8 flex justify-center gap-4">
+          <div className="mt-6 flex justify-center">
+            <PixelAgent size="lg" />
+          </div>
+          <div className="mt-6 flex justify-center gap-4">
             <Link
               href="/projects"
               className="rounded-lg bg-coral px-6 py-3 font-medium text-white transition hover:bg-coral-light"

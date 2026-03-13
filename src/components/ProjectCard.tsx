@@ -30,9 +30,13 @@ export default function ProjectCard({ project }: { project: Project }) {
         <span className="text-sm font-medium text-charcoal">
           {metric.current_best.toLocaleString()} {metric.unit}
         </span>
-        <span className="ml-2 text-sm font-medium text-sage">
-          &uarr; {improvement.toFixed(1)}% improvement
-        </span>
+        {improvement > 0 ? (
+          <span className="ml-2 text-sm font-medium text-sage">
+            &uarr; {improvement.toFixed(1)}% improvement
+          </span>
+        ) : (
+          <span className="ml-2 text-sm text-charcoal-light">baseline</span>
+        )}
       </div>
 
       {/* Bottom row */}

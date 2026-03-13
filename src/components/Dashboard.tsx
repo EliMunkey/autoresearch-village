@@ -43,9 +43,13 @@ export default function Dashboard({
             {metric.unit}
           </span>
         </p>
-        <p className="mt-1 text-sm text-sage">
-          &uarr; {improvement.toFixed(1)}% from baseline
-        </p>
+        {improvement > 0 ? (
+          <p className="mt-1 text-sm text-sage">
+            &uarr; {improvement.toFixed(1)}% from baseline
+          </p>
+        ) : (
+          <p className="mt-1 text-sm text-charcoal-light">baseline</p>
+        )}
       </div>
     </div>
   )
