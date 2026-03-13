@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { ExternalLink } from 'lucide-react'
 import { getProject, getAllProjects } from '@/data/projects'
 import { ExperimentResult } from '@/data/types'
+import { fetchProjectStats } from '@/lib/api'
 import FieldTag from '@/components/FieldTag'
 import Dashboard from '@/components/Dashboard'
 import ProgressChart from '@/components/ProgressChart'
@@ -47,9 +48,29 @@ export default async function Page({
   const project = getProject(slug)
   if (!project) notFound()
 
-  const sortedExperiments = [...project.stats.recent_experiments].sort(
+  const liveStats = await fetchProjectStats(slug)
+
+  const stats = liveStats
+    ? {
+        active_agents: liveStats.active_agents,
+        total_experiments: liveStats.total_experiments,
+        contributors: liveStats.contributors,
+        best_result: liveStats.best_result,
+        history: liveStats.history,
+        recent_experiments: liveStats.recent_experiments,
+      }
+    : project.stats
+
+  const metric = liveStats
+    ? {
+        ...project.metric,
+        current_best: liveStats.best_result,
+      }
+    : project.metric
+
+  const sortedExperiments = [...stats.recent_experiments].sort(
     (a: ExperimentResult, b: ExperimentResult) =>
-      project.metric.direction === 'lower'
+      metric.direction === 'lower'
         ? a.value - b.value
         : b.value - a.value,
   )
@@ -84,16 +105,16 @@ export default async function Page({
 
       {/* Section 2 — Dashboard */}
       <section className="py-8">
-        <Dashboard stats={project.stats} metric={project.metric} />
+        <Dashboard stats={stats} metric={metric} />
       </section>
 
       {/* Section 3 — Progress Chart */}
       <section className="py-8">
         <h2 className="mb-4 text-xl font-semibold">Progress Over Time</h2>
         <ProgressChart
-          history={project.stats.history}
-          metricName={project.metric.name}
-          direction={project.metric.direction}
+          history={stats.history}
+          metricName={metric.name}
+          direction={metric.direction}
         />
       </section>
 
@@ -122,7 +143,7 @@ export default async function Page({
                   >
                     <td className="px-4 py-3 font-medium">{index + 1}</td>
                     <td className="px-4 py-3 font-mono">
-                      {exp.value} {project.metric.unit}
+                      {exp.value} {metric.unit}
                     </td>
                     <td className="max-w-xs truncate px-4 py-3">
                       {exp.hypothesis}

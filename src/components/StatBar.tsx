@@ -1,7 +1,7 @@
-import { getGlobalStats } from '@/data/projects'
+import { fetchGlobalStats } from '@/lib/api'
 
-export default function StatBar() {
-  const stats = getGlobalStats()
+export default async function StatBar() {
+  const stats = await fetchGlobalStats()
 
   return (
     <section className="mx-auto max-w-6xl px-4">
