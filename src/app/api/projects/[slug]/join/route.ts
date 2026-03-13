@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { generateToken, hashToken } from '@/lib/auth'
+import { slugSchema, joinSchema, parseBody } from '@/lib/validate'
+import { applyRateLimit } from '@/lib/rate-limit'
 
 export async function POST(
   request: NextRequest,
@@ -9,29 +12,47 @@ export async function POST(
 
   if (!supabase) {
     return NextResponse.json(
-      { error: 'Supabase is not configured' },
+      { error: 'Database not configured' },
       { status: 503 }
     )
   }
 
-  try {
-    const body = await request.json()
-    const { agent_id, agent_type } = body
+  if (!slugSchema.safeParse(slug).success) {
+    return NextResponse.json({ error: 'Invalid project slug' }, { status: 400 })
+  }
 
-    if (!agent_id) {
-      return NextResponse.json(
-        { error: 'agent_id is required' },
-        { status: 400 }
-      )
+  const rateLimited = applyRateLimit(request, 'join')
+  if (rateLimited) return rateLimited
+
+  const parsed = await parseBody(request, joinSchema)
+  if ('error' in parsed) {
+    return NextResponse.json({ error: parsed.error }, { status: parsed.status })
+  }
+  const { agent_id } = parsed.data
+
+  try {
+    // Check project exists BEFORE any writes (fixes the 500)
+    const { data: project, error: projectError } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('slug', slug)
+      .single()
+
+    if (projectError || !project) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 })
     }
 
-    // Upsert agent into agents table
+    // Generate auth token and upsert agent
+    const token = generateToken()
+    const tokenHash = hashToken(token)
+
     const { error: agentError } = await supabase
       .from('agents')
       .upsert(
         {
           agent_id,
           project_slug: slug,
+          auth_token_hash: tokenHash,
           last_seen_at: new Date().toISOString(),
         },
         { onConflict: 'agent_id,project_slug' }
@@ -39,34 +60,20 @@ export async function POST(
 
     if (agentError) throw agentError
 
-    // Fetch project config
-    const { data: project, error: projectError } = await supabase
-      .from('projects')
-      .select('*')
-      .eq('slug', slug)
-      .single()
-
-    if (projectError) throw projectError
-
-    // Fetch current best
-    const { data: currentBest } = await supabase
-      .from('global_best')
-      .select('*')
-      .eq('project_slug', slug)
-      .single()
-
-    // Count total experiments
-    const { count: experimentCount, error: countError } = await supabase
-      .from('experiments')
-      .select('*', { count: 'exact', head: true })
-      .eq('project_slug', slug)
-
-    if (countError) throw countError
+    // Fetch best + count in parallel
+    const [bestResult, countResult] = await Promise.all([
+      supabase.from('global_best').select('*').eq('project_slug', slug).single(),
+      supabase
+        .from('experiments')
+        .select('*', { count: 'exact', head: true })
+        .eq('project_slug', slug),
+    ])
 
     return NextResponse.json({
+      token,
       project,
-      current_best: currentBest,
-      experiment_count: experimentCount ?? 0,
+      current_best: bestResult.data,
+      experiment_count: countResult.count ?? 0,
     })
   } catch (error) {
     console.error('Error in join route:', error)

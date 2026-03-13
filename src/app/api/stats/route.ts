@@ -1,33 +1,39 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { applyRateLimit } from '@/lib/rate-limit'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   if (!supabase) {
     return NextResponse.json(
-      { error: 'Supabase is not configured' },
+      { error: 'Database not configured' },
       { status: 503 }
     )
   }
 
+  const rateLimited = applyRateLimit(request, 'stats')
+  if (rateLimited) return rateLimited
+
   try {
     const twoMinAgo = new Date(Date.now() - 2 * 60 * 1000).toISOString()
 
-    // Active agents across all projects
-    const { count: activeAgents } = await supabase
-      .from('agents')
-      .select('*', { count: 'exact', head: true })
-      .gt('last_seen_at', twoMinAgo)
-
-    // Total completed experiments across all projects
-    const { count: totalExperiments } = await supabase
-      .from('experiments')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'completed')
-
-    // Count projects
-    const { count: projectCount } = await supabase
-      .from('projects')
-      .select('*', { count: 'exact', head: true })
+    // Run all reads in parallel
+    const [
+      { count: activeAgents },
+      { count: totalExperiments },
+      { count: projectCount },
+    ] = await Promise.all([
+      supabase
+        .from('agents')
+        .select('*', { count: 'exact', head: true })
+        .gt('last_seen_at', twoMinAgo),
+      supabase
+        .from('experiments')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'completed'),
+      supabase
+        .from('projects')
+        .select('*', { count: 'exact', head: true }),
+    ])
 
     const response = NextResponse.json({
       active_agents: activeAgents ?? 0,
@@ -37,7 +43,7 @@ export async function GET() {
 
     response.headers.set(
       'Cache-Control',
-      'public, s-maxage=10, stale-while-revalidate=30'
+      'private, s-maxage=10, stale-while-revalidate=30'
     )
 
     return response

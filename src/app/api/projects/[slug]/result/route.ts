@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { validateToken } from '@/lib/auth'
+import { slugSchema, resultSchema, parseBody } from '@/lib/validate'
+import { applyRateLimit } from '@/lib/rate-limit'
 
 export async function POST(
   request: NextRequest,
@@ -9,23 +12,38 @@ export async function POST(
 
   if (!supabase) {
     return NextResponse.json(
-      { error: 'Supabase is not configured' },
+      { error: 'Database not configured' },
       { status: 503 }
     )
   }
 
+  if (!slugSchema.safeParse(slug).success) {
+    return NextResponse.json({ error: 'Invalid project slug' }, { status: 400 })
+  }
+
+  const rateLimited = applyRateLimit(request, 'result')
+  if (rateLimited) return rateLimited
+
+  // Authenticate
+  const agent = await validateToken(request)
+  if (!agent) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  if (agent.project_slug !== slug) {
+    return NextResponse.json(
+      { error: 'Token not valid for this project' },
+      { status: 403 }
+    )
+  }
+
+  const parsed = await parseBody(request, resultSchema)
+  if ('error' in parsed) {
+    return NextResponse.json({ error: parsed.error }, { status: parsed.status })
+  }
+  const { experiment_id, result_value, agent_type } = parsed.data
+
   try {
-    const body = await request.json()
-    const { experiment_id, agent_id, result_value, agent_type } = body
-
-    if (!experiment_id || !agent_id || result_value === undefined) {
-      return NextResponse.json(
-        { error: 'experiment_id, agent_id, and result_value are required' },
-        { status: 400 }
-      )
-    }
-
-    // Update experiment to completed
+    // Update experiment — agent_id from auth, not from body
     const { data: updated, error: updateError } = await supabase
       .from('experiments')
       .update({
@@ -35,7 +53,7 @@ export async function POST(
         completed_at: new Date().toISOString(),
       })
       .eq('id', experiment_id)
-      .eq('agent_id', agent_id)
+      .eq('agent_id', agent.agent_id)
       .eq('status', 'claimed')
       .select()
 
@@ -48,27 +66,27 @@ export async function POST(
       )
     }
 
-    // Fetch project to know metric_direction
-    const { data: project, error: projectError } = await supabase
-      .from('projects')
-      .select('metric_direction')
-      .eq('slug', slug)
-      .single()
+    // Fetch project direction + global best in parallel
+    const [projectResult, bestResult] = await Promise.all([
+      supabase
+        .from('projects')
+        .select('metric_direction')
+        .eq('slug', slug)
+        .single(),
+      supabase
+        .from('global_best')
+        .select('*')
+        .eq('project_slug', slug)
+        .single(),
+    ])
 
-    if (projectError) throw projectError
+    if (projectResult.error) throw projectResult.error
 
-    // Check global_best for this project
-    const { data: globalBest } = await supabase
-      .from('global_best')
-      .select('*')
-      .eq('project_slug', slug)
-      .single()
-
+    const globalBest = bestResult.data
     let isNewBest = false
-    const direction = project.metric_direction ?? 'lower'
+    const direction = projectResult.data.metric_direction ?? 'lower'
 
     if (!globalBest) {
-      // No existing best — this is the first result
       isNewBest = true
       await supabase.from('global_best').insert({
         project_slug: slug,
@@ -79,7 +97,10 @@ export async function POST(
     } else {
       if (direction === 'lower' && result_value < globalBest.best_value) {
         isNewBest = true
-      } else if (direction === 'higher' && result_value > globalBest.best_value) {
+      } else if (
+        direction === 'higher' &&
+        result_value > globalBest.best_value
+      ) {
         isNewBest = true
       }
 
@@ -95,19 +116,17 @@ export async function POST(
       }
     }
 
-    const bestValue = isNewBest ? result_value : globalBest?.best_value ?? result_value
+    const bestValue = isNewBest
+      ? result_value
+      : (globalBest?.best_value ?? result_value)
 
-    // Update agent's last_seen_at
-    await supabase
+    // Update agent's last_seen_at (fire and forget)
+    supabase
       .from('agents')
-      .upsert(
-        {
-          agent_id,
-          project_slug: slug,
-          last_seen_at: new Date().toISOString(),
-        },
-        { onConflict: 'agent_id,project_slug' }
-      )
+      .update({ last_seen_at: new Date().toISOString() })
+      .eq('agent_id', agent.agent_id)
+      .eq('project_slug', slug)
+      .then(() => {})
 
     return NextResponse.json({
       recorded: true,

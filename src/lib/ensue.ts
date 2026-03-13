@@ -33,7 +33,13 @@ export async function fetchEnsueStats() {
 
   if (!bestData?.value) return null
 
-  const best = JSON.parse(bestData.value)
+  let best: { val_bpb: number; agent_id?: string; description?: string; achieved_at?: string }
+  try {
+    best = JSON.parse(bestData.value)
+  } catch {
+    return null
+  }
+  if (typeof best.val_bpb !== 'number') return null
 
   const recentKeys = await ensueRpc('public_list_keys', {
     path: 'autoresearch-at-home/results',
