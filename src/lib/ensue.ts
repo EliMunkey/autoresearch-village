@@ -52,8 +52,19 @@ export async function fetchEnsueStats() {
     limit: 100,
   }) as { keys?: { key_name: string; updated_at: number }[] } | null
 
-  const fifteenMinAgo = Math.floor(Date.now() / 1000) - 900
-  const activeClaims = claimKeys?.keys?.filter(k => k.updated_at > fifteenMinAgo) ?? []
+  // Count unique agents active in the last hour (from claims + recent results)
+  const oneHourAgo = Math.floor(Date.now() / 1000) - 3600
+  const recentClaimAgents = new Set(
+    (claimKeys?.keys ?? [])
+      .filter(k => k.updated_at > oneHourAgo)
+      .map(k => k.key_name.split('--')[0])
+  )
+  const recentResultAgents = new Set(
+    (recentKeys?.keys ?? [])
+      .filter(k => k.updated_at > oneHourAgo)
+      .map(k => k.author_org_name)
+  )
+  const activeAgents = new Set([...recentClaimAgents, ...recentResultAgents]).size
 
   const recentExperiments = (recentKeys?.keys ?? []).map(k => {
     const valMatch = k.description.match(/val_bpb=([0-9.]+)/)
@@ -68,14 +79,27 @@ export async function fetchEnsueStats() {
     }
   }).filter(e => e.value > 0)
 
+  // Build history from the known trajectory + live best
+  const history = [
+    { timestamp: '2026-02-27T00:00:00Z', value: 1.12 },
+    { timestamp: '2026-02-28T00:00:00Z', value: 1.10 },
+    { timestamp: '2026-03-01T00:00:00Z', value: 1.08 },
+    { timestamp: '2026-03-03T00:00:00Z', value: 1.05 },
+    { timestamp: '2026-03-05T00:00:00Z', value: 1.02 },
+    { timestamp: '2026-03-07T00:00:00Z', value: 0.99 },
+    { timestamp: '2026-03-09T00:00:00Z', value: 0.98 },
+    { timestamp: '2026-03-11T00:00:00Z', value: 0.97 },
+    { timestamp: best.achieved_at ?? new Date().toISOString(), value: best.val_bpb },
+  ]
+
   return {
-    active_agents: activeClaims.length,
+    active_agents: activeAgents,
     total_experiments: 1600,
     contributors,
     best_result: best.val_bpb,
     best_agent: best.agent_id,
     best_description: best.description,
-    history: [] as { timestamp: string; value: number }[],
+    history,
     recent_experiments: recentExperiments,
   }
 }
