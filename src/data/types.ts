@@ -28,6 +28,7 @@ export interface Project {
   field: string
   field_color: string
   compute_tier: 'cpu' | 'single-gpu' | 'multi-gpu'
+  status: 'live' | 'showcase'
   description: string
   long_description: string
   repo_url: string

@@ -115,20 +115,38 @@ export default async function Page({
         </div>
       </section>
 
+      {/* Showcase banner */}
+      {project.status === 'showcase' && (
+        <section className="py-4">
+          <div className="rounded-xl border border-amber/30 bg-amber/5 px-6 py-4">
+            <p className="text-sm text-charcoal">
+              <span className="font-semibold">Showcase project</span> — This
+              targets a real open-source repo. Improvements will be submitted as
+              pull requests upstream. No experiments have been run through the
+              Village yet.
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* Section 2 — Dashboard */}
-      <section className="py-8">
-        <Dashboard stats={stats} metric={metric} />
-      </section>
+      {project.status === 'live' && (
+        <section className="py-8">
+          <Dashboard stats={stats} metric={metric} />
+        </section>
+      )}
 
       {/* Section 3 — Progress Chart */}
-      <section className="py-8">
-        <h2 className="mb-4 text-xl font-semibold">Progress Over Time</h2>
-        <ProgressChart
-          history={stats.history}
-          metricName={metric.name}
-          direction={metric.direction}
-        />
-      </section>
+      {stats.history.length > 0 && (
+        <section className="py-8">
+          <h2 className="mb-4 text-xl font-semibold">Progress Over Time</h2>
+          <ProgressChart
+            history={stats.history}
+            metricName={metric.name}
+            direction={metric.direction}
+          />
+        </section>
+      )}
 
       {/* Section 4 — Recent Experiments */}
       <section className="py-8">

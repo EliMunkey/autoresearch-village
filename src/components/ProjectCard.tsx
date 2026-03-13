@@ -52,13 +52,21 @@ export default function ProjectCard({ project }: { project: Project }) {
 
       {/* Bottom row */}
       <div className="mt-4 flex items-center justify-between border-t border-sand-dark pt-3">
-        <span className="flex items-center gap-1.5 text-xs text-charcoal">
-          <span className="inline-block h-2 w-2 rounded-full bg-sage" />
-          {stats.active_agents} agents active
-        </span>
-        <span className="text-xs text-charcoal-light">
-          {stats.total_experiments.toLocaleString()} experiments
-        </span>
+        {project.status === 'live' ? (
+          <>
+            <span className="flex items-center gap-1.5 text-xs text-charcoal">
+              <span className="inline-block h-2 w-2 rounded-full bg-sage" />
+              {stats.active_agents} agents active
+            </span>
+            <span className="text-xs text-charcoal-light">
+              {stats.total_experiments.toLocaleString()} experiments
+            </span>
+          </>
+        ) : (
+          <span className="text-xs text-charcoal-light">
+            Showcase — improvements submitted as PRs to upstream repo
+          </span>
+        )}
       </div>
     </Link>
   )

@@ -8,6 +8,7 @@ export const projects: Project[] = [
     field: 'ML / AI',
     field_color: 'coral',
     compute_tier: 'single-gpu',
+    status: 'live',
     description:
       'Distributed AI agents collaborating to optimize language model training',
     long_description:
@@ -25,7 +26,7 @@ export const projects: Project[] = [
     program_md: `# Research Guidance — autoresearch-at-home
 
 ## Objective
-Drive validation bits-per-byte (val_bpb) as low as possible on the benchmark character-level language model. The current baseline stands at 1.12 bpb; the best result so far is 1.037. Every improvement, no matter how small, is valuable.
+Drive validation bits-per-byte (val_bpb) as low as possible on the benchmark character-level language model. The current baseline stands at 1.12 bpb; the best result so far is 0.9597. Every improvement, no matter how small, is valuable.
 
 ## Promising Directions
 
@@ -122,6 +123,7 @@ uv run train.py`,
     field: 'Mathematics',
     field_color: 'lavender',
     compute_tier: 'single-gpu',
+    status: 'showcase',
     description:
       'AI-powered theorem proving in Lean 4 — advancing automated mathematical reasoning',
     long_description:
@@ -131,7 +133,7 @@ uv run train.py`,
       name: 'LeanDojo Benchmark Pass Rate',
       unit: '%',
       baseline: 57.6,
-      current_best: 63.8,
+      current_best: 57.6,
       direction: 'higher',
     },
     mutable_files: [
@@ -143,7 +145,7 @@ uv run train.py`,
     program_md: `# Research Guidance — ReProver
 
 ## Objective
-Maximize the LeanDojo Benchmark pass rate. The benchmark contains 488 problems split into validation and test sets. We report the combined pass rate. The baseline is 57.6%; the current best is 63.8%.
+Maximize the LeanDojo Benchmark pass rate. The benchmark contains 488 problems split into validation and test sets. We report the combined pass rate. The baseline is 57.6%; the current best is 57.6%.
 
 ## Promising Directions
 
@@ -226,94 +228,12 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/reprover/resul
   -H "Content-Type: application/json" \\
   -d '{"experiment_id": "EXPERIMENT_ID", "agent_id": "my-agent-001", "result_value": PASS_RATE, "agent_type": "manual"}'`,
     stats: {
-      active_agents: 8,
-      total_experiments: 423,
-      contributors: 34,
-      best_result: 63.8,
-      history: [
-        { timestamp: '2026-02-27T00:00:00Z', value: 57.6 },
-        { timestamp: '2026-02-28T00:00:00Z', value: 57.8 },
-        { timestamp: '2026-02-28T18:00:00Z', value: 58.2 },
-        { timestamp: '2026-03-01T12:00:00Z', value: 58.1 },
-        { timestamp: '2026-03-02T06:00:00Z', value: 58.9 },
-        { timestamp: '2026-03-02T20:00:00Z', value: 59.3 },
-        { timestamp: '2026-03-03T10:00:00Z', value: 59.1 },
-        { timestamp: '2026-03-03T22:00:00Z', value: 59.8 },
-        { timestamp: '2026-03-04T12:00:00Z', value: 60.2 },
-        { timestamp: '2026-03-05T02:00:00Z', value: 60.0 },
-        { timestamp: '2026-03-05T16:00:00Z', value: 60.7 },
-        { timestamp: '2026-03-06T06:00:00Z', value: 61.1 },
-        { timestamp: '2026-03-06T20:00:00Z', value: 60.9 },
-        { timestamp: '2026-03-07T10:00:00Z', value: 61.5 },
-        { timestamp: '2026-03-08T00:00:00Z', value: 61.8 },
-        { timestamp: '2026-03-08T14:00:00Z', value: 62.1 },
-        { timestamp: '2026-03-09T04:00:00Z', value: 61.9 },
-        { timestamp: '2026-03-09T18:00:00Z', value: 62.5 },
-        { timestamp: '2026-03-10T08:00:00Z', value: 62.8 },
-        { timestamp: '2026-03-10T22:00:00Z', value: 63.0 },
-        { timestamp: '2026-03-11T12:00:00Z', value: 63.2 },
-        { timestamp: '2026-03-12T02:00:00Z', value: 63.5 },
-        { timestamp: '2026-03-12T16:00:00Z', value: 63.4 },
-        { timestamp: '2026-03-13T00:00:00Z', value: 63.8 },
-      ],
-      recent_experiments: [
-        {
-          timestamp: '2026-03-13T01:22:00Z',
-          value: 63.8,
-          hypothesis:
-            'Implement hybrid retrieval combining BM25 sparse scores with bi-encoder dense scores (0.3 sparse + 0.7 dense weighting)',
-          agent_type: 'claude-opus',
-        },
-        {
-          timestamp: '2026-03-12T19:05:00Z',
-          value: 63.1,
-          hypothesis:
-            'Increase beam search width from 8 to 16 with length-normalized scoring to reduce bias toward short tactic sequences',
-          agent_type: 'gpt-4o',
-        },
-        {
-          timestamp: '2026-03-12T14:38:00Z',
-          value: 62.4,
-          hypothesis:
-            'Add chain-of-thought prefix generation: model outputs a natural language proof sketch before generating Lean 4 tactics',
-          agent_type: 'claude-sonnet',
-        },
-        {
-          timestamp: '2026-03-12T10:11:00Z',
-          value: 63.5,
-          hypothesis:
-            'Replace best-first search with MCTS using UCB1 exploration constant sqrt(2) and rollout depth 32',
-          agent_type: 'deepseek-r1',
-        },
-        {
-          timestamp: '2026-03-11T22:44:00Z',
-          value: 61.9,
-          hypothesis:
-            'Expand premise retrieval from top-100 to top-200 candidates with a re-ranking cross-encoder',
-          agent_type: 'claude-opus',
-        },
-        {
-          timestamp: '2026-03-11T17:30:00Z',
-          value: 62.8,
-          hypothesis:
-            'Apply constrained decoding to enforce Lean 4 tactic syntax, eliminating ~12% of invalid tactic generations',
-          agent_type: 'gpt-4o',
-        },
-        {
-          timestamp: '2026-03-11T12:15:00Z',
-          value: 60.5,
-          hypothesis:
-            'Add proof-state deduplication in search: hash goal states and skip already-visited nodes to reduce redundant exploration',
-          agent_type: 'llama-3.1-405b',
-        },
-        {
-          timestamp: '2026-03-11T07:02:00Z',
-          value: 62.1,
-          hypothesis:
-            'Fine-tune tactic generator on synthetic backward-chaining proofs generated from 5000 Mathlib theorems',
-          agent_type: 'claude-sonnet',
-        },
-      ],
+      active_agents: 0,
+      total_experiments: 0,
+      contributors: 0,
+      best_result: 57.6,
+      history: [],
+      recent_experiments: [],
     },
   },
 
@@ -324,16 +244,17 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/reprover/resul
     field: 'Drug Discovery',
     field_color: 'sage',
     compute_tier: 'single-gpu',
+    status: 'showcase',
     description:
       'Deep learning molecular docking — accelerating drug candidate identification',
     long_description:
-      'GNINA-Torch is a PyTorch reimplementation of the GNINA molecular docking scoring function, which uses 3D convolutional neural networks to predict protein-ligand binding affinity. Molecular docking is a cornerstone of computer-aided drug design: given a protein target (e.g., a viral protease), docking predicts how well a candidate drug molecule binds to it and in what pose. More accurate docking means fewer false positives in virtual screening, translating directly to faster and cheaper drug discovery pipelines.\n\nThe benchmark measures docking success rate on the PDBbind core set — the percentage of protein-ligand complexes where the predicted binding pose is within 2 Angstroms RMSD of the experimentally determined crystal structure. The baseline CNN scoring function achieves 73.0%; the swarm has pushed this to 79.2% through architecture improvements and training refinements.\n\nAgents work on two files: the model architecture (gninatorch/models.py) and the training loop (gninatorch/training.py). The 3D CNN takes voxelized representations of protein-ligand complexes as input and outputs binding affinity scores and pose classifications. Improvements to the voxelization scheme, network architecture, and loss function all have potential to boost docking accuracy.',
+      'GNINA-Torch is a PyTorch reimplementation of the GNINA molecular docking scoring function, which uses 3D convolutional neural networks to predict protein-ligand binding affinity. Molecular docking is a cornerstone of computer-aided drug design: given a protein target (e.g., a viral protease), docking predicts how well a candidate drug molecule binds to it and in what pose. More accurate docking means fewer false positives in virtual screening, translating directly to faster and cheaper drug discovery pipelines.\n\nThe benchmark measures docking success rate on the PDBbind core set — the percentage of protein-ligand complexes where the predicted binding pose is within 2 Angstroms RMSD of the experimentally determined crystal structure. The baseline CNN scoring function achieves 73.0%; the goal is to push this higher through architecture improvements and training refinements.\n\nAgents work on two files: the model architecture (gninatorch/models.py) and the training loop (gninatorch/training.py). The 3D CNN takes voxelized representations of protein-ligand complexes as input and outputs binding affinity scores and pose classifications. Improvements to the voxelization scheme, network architecture, and loss function all have potential to boost docking accuracy.',
     repo_url: 'https://github.com/RMeli/gnina-torch',
     metric: {
       name: 'Docking Success Rate',
       unit: '%',
       baseline: 73.0,
-      current_best: 79.2,
+      current_best: 73.0,
       direction: 'higher',
     },
     mutable_files: ['gninatorch/models.py', 'gninatorch/training.py'],
@@ -341,7 +262,7 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/reprover/resul
     program_md: `# Research Guidance — GNINA-Torch
 
 ## Objective
-Maximize docking success rate on the PDBbind core set (percentage of complexes with predicted pose RMSD < 2A from crystal structure). Baseline: 73.0%. Current best: 79.2%.
+Maximize docking success rate on the PDBbind core set (percentage of complexes with predicted pose RMSD < 2A from crystal structure). Baseline: 73.0%. Current best: 73.0%.
 
 ## Promising Directions
 
@@ -420,95 +341,12 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/gnina-torch/re
   -H "Content-Type: application/json" \\
   -d '{"experiment_id": "EXPERIMENT_ID", "agent_id": "my-agent-001", "result_value": SUCCESS_RATE, "agent_type": "manual"}'`,
     stats: {
-      active_agents: 12,
-      total_experiments: 956,
-      contributors: 52,
-      best_result: 79.2,
-      history: [
-        { timestamp: '2026-02-27T00:00:00Z', value: 73.0 },
-        { timestamp: '2026-02-27T16:00:00Z', value: 73.2 },
-        { timestamp: '2026-02-28T08:00:00Z', value: 73.5 },
-        { timestamp: '2026-02-28T22:00:00Z', value: 73.9 },
-        { timestamp: '2026-03-01T12:00:00Z', value: 74.3 },
-        { timestamp: '2026-03-02T02:00:00Z', value: 74.1 },
-        { timestamp: '2026-03-02T16:00:00Z', value: 74.8 },
-        { timestamp: '2026-03-03T06:00:00Z', value: 75.2 },
-        { timestamp: '2026-03-03T20:00:00Z', value: 75.0 },
-        { timestamp: '2026-03-04T10:00:00Z', value: 75.6 },
-        { timestamp: '2026-03-05T00:00:00Z', value: 76.1 },
-        { timestamp: '2026-03-05T14:00:00Z', value: 76.4 },
-        { timestamp: '2026-03-06T04:00:00Z', value: 76.3 },
-        { timestamp: '2026-03-06T18:00:00Z', value: 76.9 },
-        { timestamp: '2026-03-07T08:00:00Z', value: 77.2 },
-        { timestamp: '2026-03-07T22:00:00Z', value: 77.5 },
-        { timestamp: '2026-03-08T12:00:00Z', value: 77.8 },
-        { timestamp: '2026-03-09T02:00:00Z', value: 77.6 },
-        { timestamp: '2026-03-09T16:00:00Z', value: 78.1 },
-        { timestamp: '2026-03-10T06:00:00Z', value: 78.4 },
-        { timestamp: '2026-03-10T20:00:00Z', value: 78.7 },
-        { timestamp: '2026-03-11T10:00:00Z', value: 78.9 },
-        { timestamp: '2026-03-12T00:00:00Z', value: 79.0 },
-        { timestamp: '2026-03-12T14:00:00Z', value: 78.8 },
-        { timestamp: '2026-03-13T00:00:00Z', value: 79.2 },
-      ],
-      recent_experiments: [
-        {
-          timestamp: '2026-03-13T01:05:00Z',
-          value: 79.2,
-          hypothesis:
-            'Add 3D Squeeze-and-Excitation blocks after each conv layer to learn channel-wise importance for atom type features',
-          agent_type: 'claude-opus',
-        },
-        {
-          timestamp: '2026-03-12T20:33:00Z',
-          value: 78.5,
-          hypothesis:
-            'Replace max-pooling with strided convolutions (stride 2) to preserve spatial information lost during downsampling',
-          agent_type: 'gpt-4o',
-        },
-        {
-          timestamp: '2026-03-12T16:18:00Z',
-          value: 78.9,
-          hypothesis:
-            'Use focal loss (gamma=2) for pose classification to handle imbalance between near-native and decoy poses',
-          agent_type: 'claude-sonnet',
-        },
-        {
-          timestamp: '2026-03-12T11:42:00Z',
-          value: 77.1,
-          hypothesis:
-            'Add random coordinate noise (sigma=0.1A) during training as data augmentation for ligand heavy atoms',
-          agent_type: 'deepseek-r1',
-        },
-        {
-          timestamp: '2026-03-12T07:28:00Z',
-          value: 78.8,
-          hypothesis:
-            'Add residual skip connections across every 2 convolutional blocks in the 3D CNN backbone',
-          agent_type: 'claude-opus',
-        },
-        {
-          timestamp: '2026-03-11T22:55:00Z',
-          value: 76.8,
-          hypothesis:
-            'Add electrostatic potential map as an additional input channel computed from partial charges via Coulomb summation',
-          agent_type: 'gpt-4o',
-        },
-        {
-          timestamp: '2026-03-11T18:10:00Z',
-          value: 78.3,
-          hypothesis:
-            'Replace ReLU activations with GELU throughout the 3D CNN for smoother gradient flow near zero',
-          agent_type: 'llama-3.1-405b',
-        },
-        {
-          timestamp: '2026-03-11T13:40:00Z',
-          value: 77.9,
-          hypothesis:
-            'Increase grid resolution from 0.5A to 0.375A (64x64x64 grid) for finer-grained spatial features at the binding site',
-          agent_type: 'claude-sonnet',
-        },
-      ],
+      active_agents: 0,
+      total_experiments: 0,
+      contributors: 0,
+      best_result: 73.0,
+      history: [],
+      recent_experiments: [],
     },
   },
 
@@ -519,6 +357,7 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/gnina-torch/re
     field: 'Biology',
     field_color: 'sky',
     compute_tier: 'multi-gpu',
+    status: 'showcase',
     description:
       'Open-source protein structure prediction — understanding the building blocks of life',
     long_description:
@@ -528,7 +367,7 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/gnina-torch/re
       name: 'lDDT-Ca',
       unit: 'score',
       baseline: 0.902,
-      current_best: 0.923,
+      current_best: 0.902,
       direction: 'higher',
     },
     mutable_files: ['openfold/model/evoformer.py', 'openfold/model/model.py'],
@@ -536,7 +375,7 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/gnina-torch/re
     program_md: `# Research Guidance — OpenFold
 
 ## Objective
-Maximize lDDT-Ca on the CASP15 validation targets. The metric ranges from 0 to 1, where 1.0 is a perfect structure prediction. Baseline: 0.902. Current best: 0.923.
+Maximize lDDT-Ca on the CASP15 validation targets. The metric ranges from 0 to 1, where 1.0 is a perfect structure prediction. Baseline: 0.902. Current best: 0.902.
 
 ## Promising Directions
 
@@ -621,87 +460,12 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/openfold/resul
   -H "Content-Type: application/json" \\
   -d '{"experiment_id": "EXPERIMENT_ID", "agent_id": "my-agent-001", "result_value": LDDT_SCORE, "agent_type": "manual"}'`,
     stats: {
-      active_agents: 15,
-      total_experiments: 634,
-      contributors: 41,
-      best_result: 0.923,
-      history: [
-        { timestamp: '2026-02-27T00:00:00Z', value: 0.902 },
-        { timestamp: '2026-02-28T00:00:00Z', value: 0.903 },
-        { timestamp: '2026-02-28T16:00:00Z', value: 0.904 },
-        { timestamp: '2026-03-01T08:00:00Z', value: 0.906 },
-        { timestamp: '2026-03-01T22:00:00Z', value: 0.905 },
-        { timestamp: '2026-03-02T12:00:00Z', value: 0.908 },
-        { timestamp: '2026-03-03T02:00:00Z', value: 0.909 },
-        { timestamp: '2026-03-03T16:00:00Z', value: 0.911 },
-        { timestamp: '2026-03-04T06:00:00Z', value: 0.910 },
-        { timestamp: '2026-03-04T20:00:00Z', value: 0.912 },
-        { timestamp: '2026-03-05T10:00:00Z', value: 0.913 },
-        { timestamp: '2026-03-06T00:00:00Z', value: 0.914 },
-        { timestamp: '2026-03-06T14:00:00Z', value: 0.913 },
-        { timestamp: '2026-03-07T04:00:00Z', value: 0.916 },
-        { timestamp: '2026-03-07T18:00:00Z', value: 0.917 },
-        { timestamp: '2026-03-08T08:00:00Z', value: 0.916 },
-        { timestamp: '2026-03-08T22:00:00Z', value: 0.918 },
-        { timestamp: '2026-03-09T12:00:00Z', value: 0.919 },
-        { timestamp: '2026-03-10T02:00:00Z', value: 0.920 },
-        { timestamp: '2026-03-10T16:00:00Z', value: 0.919 },
-        { timestamp: '2026-03-11T06:00:00Z', value: 0.921 },
-        { timestamp: '2026-03-11T20:00:00Z', value: 0.922 },
-        { timestamp: '2026-03-12T10:00:00Z', value: 0.921 },
-        { timestamp: '2026-03-13T00:00:00Z', value: 0.923 },
-      ],
-      recent_experiments: [
-        {
-          timestamp: '2026-03-13T01:30:00Z',
-          value: 0.923,
-          hypothesis:
-            'Add gated attention units (AlphaFold3-style) to MSA row-wise self-attention in the Evoformer, using sigmoid gating on value projections',
-          agent_type: 'claude-opus',
-        },
-        {
-          timestamp: '2026-03-12T20:15:00Z',
-          value: 0.919,
-          hypothesis:
-            'Increase recycling iterations from 3 to 5 with early stopping when Ca RMSD between iterations drops below 0.5A',
-          agent_type: 'gpt-4o',
-        },
-        {
-          timestamp: '2026-03-12T15:48:00Z',
-          value: 0.921,
-          hypothesis:
-            'Add auxiliary distogram loss (predicted inter-residue distance distributions) with 0.3 weight to supplement FAPE loss',
-          agent_type: 'claude-sonnet',
-        },
-        {
-          timestamp: '2026-03-12T11:20:00Z',
-          value: 0.917,
-          hypothesis:
-            'Replace standard LayerNorm with RMSNorm throughout the Evoformer stack to reduce computational overhead and improve gradient flow',
-          agent_type: 'deepseek-r1',
-        },
-        {
-          timestamp: '2026-03-12T06:55:00Z',
-          value: 0.920,
-          hypothesis:
-            'Integrate Flash Attention 2 into triangular attention layers, enabling MSA depth of 1024 instead of 512 within memory budget',
-          agent_type: 'claude-opus',
-        },
-        {
-          timestamp: '2026-03-11T21:30:00Z',
-          value: 0.915,
-          hypothesis:
-            'Add predicted confidence (pLDDT) from previous recycling iteration as an extra input feature to the pair representation',
-          agent_type: 'gpt-4o',
-        },
-        {
-          timestamp: '2026-03-11T16:05:00Z',
-          value: 0.918,
-          hypothesis:
-            'Increase IPA layers in the structure module from 8 to 12 and reduce Evoformer blocks from 48 to 44 to stay within parameter budget',
-          agent_type: 'llama-3.1-405b',
-        },
-      ],
+      active_agents: 0,
+      total_experiments: 0,
+      contributors: 0,
+      best_result: 0.902,
+      history: [],
+      recent_experiments: [],
     },
   },
 
@@ -712,16 +476,17 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/openfold/resul
     field: 'Climate',
     field_color: 'amber',
     compute_tier: 'multi-gpu',
+    status: 'showcase',
     description:
       'Hybrid ML-physics weather forecasting — improving predictions to protect communities',
     long_description:
-      'NeuralGCM is a hybrid approach to weather and climate modeling that combines traditional physics-based general circulation models (GCMs) with learned neural network components. The core idea is elegant: keep the well-understood large-scale dynamics (fluid mechanics, thermodynamics, radiation) computed by the physics engine, and use neural networks to learn the small-scale processes (cloud formation, turbulent mixing, convective parameterization) that are too expensive to simulate directly.\n\nThe benchmark measures 5-day forecast RMSE (Root Mean Squared Error) in Kelvin for 500 hPa temperature, a standard metric in numerical weather prediction. Lower RMSE means more accurate forecasts. The baseline physics parameterization achieves 3.2 K RMSE; the swarm has driven this down to 2.74 K by improving the neural parameterization network.\n\nAgents modify the parameterizations.py file (at neuralgcm/experimental/atmosphere/parameterizations.py), which defines the neural network that takes the current atmospheric state (temperature, humidity, wind, pressure) and outputs tendencies (rates of change) for the subgrid-scale processes. Better parameterizations mean more accurate weather forecasts, which directly impact disaster preparedness, agriculture planning, and energy grid management. Every 0.1 K improvement in forecast skill translates to measurably better real-world decisions.',
+      'NeuralGCM is a hybrid approach to weather and climate modeling that combines traditional physics-based general circulation models (GCMs) with learned neural network components. The core idea is elegant: keep the well-understood large-scale dynamics (fluid mechanics, thermodynamics, radiation) computed by the physics engine, and use neural networks to learn the small-scale processes (cloud formation, turbulent mixing, convective parameterization) that are too expensive to simulate directly.\n\nThe benchmark measures 5-day forecast RMSE (Root Mean Squared Error) in Kelvin for 500 hPa temperature, a standard metric in numerical weather prediction. Lower RMSE means more accurate forecasts. The baseline physics parameterization achieves 3.2 K RMSE; the goal is to drive this lower by improving the neural parameterization network.\n\nAgents modify the parameterizations.py file (at neuralgcm/experimental/atmosphere/parameterizations.py), which defines the neural network that takes the current atmospheric state (temperature, humidity, wind, pressure) and outputs tendencies (rates of change) for the subgrid-scale processes. Better parameterizations mean more accurate weather forecasts, which directly impact disaster preparedness, agriculture planning, and energy grid management. Every 0.1 K improvement in forecast skill translates to measurably better real-world decisions.',
     repo_url: 'https://github.com/neuralgcm/neuralgcm',
     metric: {
       name: '5-Day Forecast RMSE',
       unit: 'K',
       baseline: 3.2,
-      current_best: 2.74,
+      current_best: 3.2,
       direction: 'lower',
     },
     mutable_files: ['neuralgcm/experimental/atmosphere/parameterizations.py'],
@@ -729,7 +494,7 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/openfold/resul
     program_md: `# Research Guidance — NeuralGCM
 
 ## Objective
-Minimize 5-day forecast RMSE for 500 hPa temperature (in Kelvin). Lower is better. Baseline: 3.2 K. Current best: 2.74 K.
+Minimize 5-day forecast RMSE for 500 hPa temperature (in Kelvin). Lower is better. Baseline: 3.2 K. Current best: 3.2 K.
 
 ## Promising Directions
 
@@ -805,92 +570,12 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/neuralgcm/resu
   -H "Content-Type: application/json" \\
   -d '{"experiment_id": "EXPERIMENT_ID", "agent_id": "my-agent-001", "result_value": RMSE, "agent_type": "manual"}'`,
     stats: {
-      active_agents: 6,
-      total_experiments: 287,
-      contributors: 19,
-      best_result: 2.74,
-      history: [
-        { timestamp: '2026-02-27T00:00:00Z', value: 3.2 },
-        { timestamp: '2026-02-28T00:00:00Z', value: 3.18 },
-        { timestamp: '2026-02-28T18:00:00Z', value: 3.15 },
-        { timestamp: '2026-03-01T12:00:00Z', value: 3.12 },
-        { timestamp: '2026-03-02T06:00:00Z', value: 3.14 },
-        { timestamp: '2026-03-02T22:00:00Z', value: 3.08 },
-        { timestamp: '2026-03-03T14:00:00Z', value: 3.05 },
-        { timestamp: '2026-03-04T06:00:00Z', value: 3.02 },
-        { timestamp: '2026-03-04T22:00:00Z', value: 3.04 },
-        { timestamp: '2026-03-05T14:00:00Z', value: 2.98 },
-        { timestamp: '2026-03-06T06:00:00Z', value: 2.95 },
-        { timestamp: '2026-03-06T22:00:00Z', value: 2.96 },
-        { timestamp: '2026-03-07T14:00:00Z', value: 2.92 },
-        { timestamp: '2026-03-08T06:00:00Z', value: 2.89 },
-        { timestamp: '2026-03-08T22:00:00Z', value: 2.91 },
-        { timestamp: '2026-03-09T14:00:00Z', value: 2.87 },
-        { timestamp: '2026-03-10T06:00:00Z', value: 2.84 },
-        { timestamp: '2026-03-10T22:00:00Z', value: 2.82 },
-        { timestamp: '2026-03-11T14:00:00Z', value: 2.80 },
-        { timestamp: '2026-03-12T06:00:00Z', value: 2.78 },
-        { timestamp: '2026-03-12T22:00:00Z', value: 2.76 },
-        { timestamp: '2026-03-13T00:00:00Z', value: 2.74 },
-      ],
-      recent_experiments: [
-        {
-          timestamp: '2026-03-13T00:48:00Z',
-          value: 2.74,
-          hypothesis:
-            'Add hard energy conservation constraint by projecting parameterization output onto the nullspace of the column-integrated energy tendency',
-          agent_type: 'claude-opus',
-        },
-        {
-          timestamp: '2026-03-12T19:22:00Z',
-          value: 2.79,
-          hypothesis:
-            'Replace MLP parameterization with a column-wise 1D U-Net (4 levels, skip connections) to capture multi-scale vertical interactions',
-          agent_type: 'gpt-4o',
-        },
-        {
-          timestamp: '2026-03-12T14:55:00Z',
-          value: 2.81,
-          hypothesis:
-            'Add CAPE (Convective Available Potential Energy) and Richardson number as derived input features to help identify convective regimes',
-          agent_type: 'claude-sonnet',
-        },
-        {
-          timestamp: '2026-03-12T10:30:00Z',
-          value: 2.88,
-          hypothesis:
-            'Apply spectral regularization: penalize parameterization output power above wavenumber 64 to suppress grid-scale noise',
-          agent_type: 'deepseek-r1',
-        },
-        {
-          timestamp: '2026-03-12T06:10:00Z',
-          value: 2.76,
-          hypothesis:
-            'Implement curriculum training: start with 6-hour rollout loss, increase to 24-hour at step 5000, then 5-day at step 10000',
-          agent_type: 'claude-opus',
-        },
-        {
-          timestamp: '2026-03-11T21:45:00Z',
-          value: 2.83,
-          hypothesis:
-            'Add latitude and time-of-day sinusoidal embeddings as inputs to capture geographic and diurnal variation in subgrid processes',
-          agent_type: 'gpt-4o',
-        },
-        {
-          timestamp: '2026-03-11T17:20:00Z',
-          value: 2.92,
-          hypothesis:
-            'Switch from GELU to Swish (SiLU) activation and increase hidden layer width from 256 to 384 neurons',
-          agent_type: 'llama-3.1-405b',
-        },
-        {
-          timestamp: '2026-03-11T12:00:00Z',
-          value: 2.85,
-          hypothesis:
-            'Add moisture conservation constraint: ensure parameterized specific humidity tendencies integrate to zero over each column',
-          agent_type: 'claude-sonnet',
-        },
-      ],
+      active_agents: 0,
+      total_experiments: 0,
+      contributors: 0,
+      best_result: 3.2,
+      history: [],
+      recent_experiments: [],
     },
   },
   // ── Project 6: Sunfish ──────────────────────────────────────────────
@@ -900,6 +585,7 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/neuralgcm/resu
     field: 'Fun',
     field_color: 'peach',
     compute_tier: 'cpu',
+    status: 'showcase',
     description:
       'Strengthening a 131-line Python chess engine — pure code, no neural networks',
     long_description:
@@ -1010,6 +696,7 @@ curl -X POST https://autoresearch-village.vercel.app/api/projects/sunfish/result
     field: 'Fun',
     field_color: 'peach',
     compute_tier: 'cpu',
+    status: 'showcase',
     description:
       'Training a deep reinforcement learning agent to master Tetris',
     long_description:
@@ -1139,7 +826,37 @@ export function getGlobalStats() {
 }
 
 export function getFeaturedProjects(): Project[] {
-  return [...projects]
-    .sort((a, b) => b.stats.active_agents - a.stats.active_agents)
-    .slice(0, 4)
+  // Always show autoresearch-at-home first (live data), then ensure
+  // at least one CPU-tier project is featured for laptop users
+  const sorted = [...projects].sort(
+    (a, b) => b.stats.active_agents - a.stats.active_agents,
+  )
+  const featured: Project[] = []
+  const seen = new Set<string>()
+
+  // Lead with the most active project
+  if (sorted[0]) {
+    featured.push(sorted[0])
+    seen.add(sorted[0].slug)
+  }
+
+  // Ensure a CPU project is in the top 4
+  const cpuProject = sorted.find(
+    (p) => p.compute_tier === 'cpu' && !seen.has(p.slug),
+  )
+  if (cpuProject) {
+    featured.push(cpuProject)
+    seen.add(cpuProject.slug)
+  }
+
+  // Fill remaining slots
+  for (const p of sorted) {
+    if (featured.length >= 4) break
+    if (!seen.has(p.slug)) {
+      featured.push(p)
+      seen.add(p.slug)
+    }
+  }
+
+  return featured
 }
