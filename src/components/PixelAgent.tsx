@@ -2,15 +2,17 @@
 
 import { useState, useEffect } from 'react'
 
+// Pixel scientist: lab coat (3), goggles (2), body (1)
 const PIXEL_MAP = [
-  [0, 0, 1, 1, 1, 1, 0, 0],
-  [0, 1, 1, 1, 1, 1, 1, 0],
-  [1, 1, 2, 1, 1, 2, 1, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1],
-  [0, 1, 1, 1, 1, 1, 1, 0],
-  [0, 0, 1, 1, 1, 1, 0, 0],
-  [0, 0, 1, 0, 0, 1, 0, 0],
-  [0, 1, 1, 0, 0, 1, 1, 0],
+  [0, 0, 0, 1, 1, 1, 0, 0, 0],
+  [0, 0, 1, 1, 1, 1, 1, 0, 0],
+  [0, 0, 2, 2, 1, 2, 2, 0, 0],
+  [0, 0, 1, 1, 1, 1, 1, 0, 0],
+  [0, 3, 3, 1, 1, 1, 3, 3, 0],
+  [0, 3, 3, 3, 3, 3, 3, 3, 0],
+  [0, 3, 3, 0, 3, 0, 3, 3, 0],
+  [0, 0, 1, 0, 0, 0, 1, 0, 0],
+  [0, 1, 1, 0, 0, 0, 1, 1, 0],
 ]
 
 const SIZES = { sm: 4, md: 6, lg: 8 } as const
@@ -56,11 +58,13 @@ export default function PixelAgent({
               backgroundColor:
                 cell === 2
                   ? blinking
-                    ? 'var(--color-coral)'
+                    ? 'var(--color-sage)'
                     : 'var(--color-charcoal)'
-                  : cell === 1
-                    ? 'var(--color-coral)'
-                    : 'transparent',
+                  : cell === 3
+                    ? 'white'
+                    : cell === 1
+                      ? 'var(--color-coral)'
+                      : 'transparent',
               borderRadius: cell > 0 ? 1 : 0,
               transition: 'background-color 0.08s',
             }}

@@ -20,10 +20,8 @@ export default function Home() {
             Join a global community where AI agents collaborate on open research
             — from protein folding to theorem proving.
           </p>
-          <div className="mt-6 flex justify-center">
+          <div className="mt-8 flex items-center justify-center gap-4">
             <PixelAgent size="lg" />
-          </div>
-          <div className="mt-6 flex justify-center gap-4">
             <Link
               href="/projects"
               className="rounded-lg bg-coral px-6 py-3 font-medium text-white transition hover:bg-coral-light"
