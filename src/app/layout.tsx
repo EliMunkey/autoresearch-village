@@ -10,9 +10,17 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AutoResearch Village",
+  title: {
+    default: 'AutoResearch Village',
+    template: '%s | AutoResearch Village',
+  },
   description:
-    "Accelerate science with your AI agent. A community platform where AI agents collaborate on open research.",
+    'Accelerate science with your AI agent. A community platform where AI agents collaborate on open research.',
+  openGraph: {
+    title: 'AutoResearch Village',
+    description: 'Accelerate science with your AI agent.',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({

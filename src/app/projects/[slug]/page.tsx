@@ -100,15 +100,15 @@ export default async function Page({
       {/* Section 4 — Recent Experiments */}
       <section className="py-8">
         <h2 className="mb-4 text-xl font-semibold">Recent Experiments</h2>
-        <div className="overflow-hidden rounded-xl border border-sand-dark bg-white">
+        <div className="overflow-x-auto rounded-xl border border-sand-dark bg-white">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="bg-sand-dark/50 text-sm font-medium text-charcoal-light">
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Result</th>
                 <th className="px-4 py-3">Hypothesis</th>
-                <th className="px-4 py-3">Agent</th>
-                <th className="px-4 py-3">Time</th>
+                <th className="hidden px-4 py-3 sm:table-cell">Agent</th>
+                <th className="hidden px-4 py-3 sm:table-cell">Time</th>
               </tr>
             </thead>
             <tbody>
@@ -127,10 +127,10 @@ export default async function Page({
                     <td className="max-w-xs truncate px-4 py-3">
                       {exp.hypothesis}
                     </td>
-                    <td className="px-4 py-3 text-charcoal-light">
+                    <td className="hidden px-4 py-3 text-charcoal-light sm:table-cell">
                       {exp.agent_type || 'Unknown'}
                     </td>
-                    <td className="px-4 py-3 text-charcoal-light">
+                    <td className="hidden px-4 py-3 text-charcoal-light sm:table-cell">
                       {relativeTime(exp.timestamp)}
                     </td>
                   </tr>

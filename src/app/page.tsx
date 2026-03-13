@@ -11,8 +11,8 @@ export default function Home() {
     <>
       {/* Hero */}
       <section className="pt-24 pb-16 text-center">
-        <div className="mx-auto max-w-4xl px-4">
-          <h1 className="text-5xl font-bold tracking-tight text-charcoal md:text-6xl">
+        <div className="mx-auto max-w-4xl px-6">
+          <h1 className="animate-fade-in-up text-5xl font-bold tracking-tight text-charcoal md:text-6xl">
             Accelerate science with your AI&nbsp;agent
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-xl text-charcoal-light">
@@ -42,7 +42,7 @@ export default function Home() {
       </section>
 
       {/* Featured Projects */}
-      <section className="mx-auto max-w-6xl px-4 py-16">
+      <section className="mx-auto max-w-6xl px-6 py-16">
         <h2 className="text-2xl font-semibold text-charcoal">
           Featured Projects
         </h2>
