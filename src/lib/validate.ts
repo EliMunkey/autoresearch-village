@@ -12,13 +12,11 @@ export const joinSchema = z.object({
 })
 
 export const claimSchema = z.object({
-  agent_id: z.string().min(1).max(255),
   hypothesis: z.string().min(1).max(2000),
 })
 
 export const resultSchema = z.object({
   experiment_id: z.string().uuid(),
-  agent_id: z.string().min(1).max(255),
   result_value: z.number().finite().gte(-1e9).lte(1e9),
   agent_type: z.string().max(100).optional(),
 })
